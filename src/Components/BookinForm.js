@@ -2,11 +2,22 @@ import React, { useState, useEffect } from 'react';
 import {  useParams } from 'react-router-dom';
 import axios from 'axios';
 
+// const setUserDetails = () => {
+//   const a = localStorage.getItem('userData');
+//   if(a) {
+//     return JSON.parse(a);
+//   } else {
+//     return [];
+//   }
+//   return [];
+// }
+
 function BookingForm() {
   const { id } = useParams();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [show, setShow] = useState(null);
+  const [userData, setUserData] = useState();
 
   useEffect(() => {
     axios
@@ -18,17 +29,18 @@ function BookingForm() {
         console.error('Error fetching show details:', error);
       });
   }, [id]);
-
+  
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    const userData = {
-        name,
-        email,
-        showId: id,
-        showName: show.name,
-      };
-      localStorage.setItem('userData', JSON.stringify(userData))
-      alert('Show booked thanks for visiting')
+    const newUserData = {
+      name,
+      email,
+      showId: id,
+      showName: name
+    }
+    setUserData((userData) => [...userData, newUserData]);
+    localStorage.setItem("userData", JSON.stringify(userData));
+    alert('Show booked thanks for visiting')
   };
 
   return (
